@@ -22,30 +22,73 @@ function _convertStringIfTrue(original) {
 }
 
 /**
- * Convert properties string into a json object
- * Only supports boolean and string types
+ * Convert property-strings into a json object.
+ *
+ * Nested properties will be converted to nested objects and parseable numeric values to int.
+ *
  */
 function convertPropsToJson(text) {
     var configObject = {};
     if (text && text.length) {
         // handle multi-line values terminated with a backslash
         text = text.replace(/\\\r?\n\s*/g, '');
+
         text.split(/\r?\n/g).forEach(function (line) {
             var props,
                 name,
                 val;
+
             line = line.trim();
+
             if (line && line.indexOf("#") !== 0 && line.indexOf("!") !== 0) {
                 props = line.split(/\=(.+)?/);
-                name = props[0] && props[0].trim();
-                val = props[1] && props[1].trim();
-                configObject[name] = _convertStringIfTrue(val);
+
+                var nestedProperties = props[0].split('.');
+
+                // if the current property-line is a nested path then objectify it
+                if (nestedProperties.length > 1) {
+
+                    var data = configObject,
+                        i;
+
+                    while(nestedProperties.length) {
+
+                        i = nestedProperties.shift();
+
+                        if (nestedProperties.length) {
+
+                            if (!data.hasOwnProperty(i)) {
+                                // If the current nested property (i) is not in our datastructure, add it
+                                data[i] = {};
+                            }
+                            data = data[i];
+
+                        } else {
+                            val = props[1] && props[1].trim();
+                            data[i] = isNaN(val) ? val : parseInt(val, 10);
+                        }
+                    }
+
+                } else {
+                    name = props[0] && props[0].trim();
+                    val = props[1] && props[1].trim();
+                    configObject[name] = isNaN(val) ? _convertStringIfTrue(val) : parseInt(val, 10);
+                }
+
             }
         });
     }
+
     return configObject;
 }
 
+/**
+ * Merges the source-file into the target-file
+ *
+ * @param {object} target the destination-object, where all keys from the source will be added
+ * @param {object} source the source-object, which will be merged into the target file
+ * @returns {object} the target-object with the merged keys and values
+ */
 function merge(target, source) {
 
   if (!source) {
@@ -53,14 +96,25 @@ function merge(target, source) {
   }
 
   for (var key in source) {
-    target[key] = source[key];
+      if (source.hasOwnProperty(key)) {
+          target[key] = source[key];
+      }
   }
 
   return target;
 
 }
 
-function convertToArray(value, grunt) {
+/**
+ * Converts the given value to an array
+ *
+ * @param {string} value the value which should be put into a new array
+ *
+ * @returns {Array} an empty array, if the value is null
+ *                  the value itself, if the value is an array already
+ *                  a new array with the given value, if the value is from another type
+ */
+function convertToArray(value) {
 
     if (!value) {
         return [];

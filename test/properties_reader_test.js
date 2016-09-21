@@ -29,15 +29,20 @@ exports.single_file_properties_reader = {
   default_options: function(test) {
     test.expect(2);
     var expected = {
-      test: true,
-      number: "1234",
-      string: "hello world",
-      "i.have.dots": "a.b.c",
-      spaces: "are fine",
-      eqsign: "<script src='bla.js'></script>",
-      empty: undefined,
-      multilineval: 'line1, line2',
-      multilineval2: 'first second third'
+        test: true,
+        number: 1234,
+        string: "hello world",
+        i: {
+            have : {
+                dots: "a.b.c",
+                stuff : '1234'
+            }
+        },
+        spaces: "are fine",
+        eqsign: "<script src='bla.js'></script>",
+        empty: undefined,
+        multilineval: 'line1, line2',
+        multilineval2: 'first second third'
     };
 
     test.deepEqual(grunt.config.get("defaultTemplateTest"), { test: true, string: "hello world"});
@@ -51,7 +56,7 @@ exports.single_file_properties_reader = {
     //test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
 
     test.done();
-  },
+  }
 };
 
 exports.multi_file_properties_reader = {
@@ -61,16 +66,21 @@ exports.multi_file_properties_reader = {
   default_options: function(test) {
     test.expect(1);
     var expected = {
-      test: true,
-      number: "1234",
-      string: "hello world 2",
-      "i.have.dots": "a.b.c",
-      spaces: "are fine",
-      eqsign: "<script src='bla.js'></script>",
-      override: "foobar",
-      empty: undefined,
-      multilineval: 'line1, line2',
-      multilineval2: 'first second third'
+        test: true,
+        number: 2345,
+        string: "hello world 2",
+        i: {
+            have : {
+                dots: "a.b.c",
+                stuff : '1234'
+            }
+        },
+        spaces: "are fine",
+        eqsign: "<script src='bla.js'></script>",
+        override: "foobar",
+        empty: undefined,
+        multilineval: 'line1, line2',
+        multilineval2: 'first second third'
     };
 
     test.deepEqual(grunt.config.get("multi_file"), expected);
@@ -79,7 +89,7 @@ exports.multi_file_properties_reader = {
   },
   custom_options: function(test) {
     test.done();
-  },
+  }
 };
 
 exports.optional_file_properties_reader = {
@@ -89,15 +99,20 @@ exports.optional_file_properties_reader = {
   default_options: function(test) {
     test.expect(1);
     var expected = {
-      test: true,
-      number: "1234",
-      string: "hello world",
-      "i.have.dots": "a.b.c",
-      spaces: "are fine",
-      eqsign: "<script src='bla.js'></script>",
-      empty: undefined,
-      multilineval: 'line1, line2',
-      multilineval2: 'first second third'
+        test: true,
+        number: 1234,
+        string: "hello world",
+        i: {
+            have : {
+                dots: "a.b.c",
+                stuff : '1234'
+            }
+        },
+        spaces: "are fine",
+        eqsign: "<script src='bla.js'></script>",
+        empty: undefined,
+        multilineval: 'line1, line2',
+        multilineval2: 'first second third'
     };
 
     test.deepEqual(grunt.config.get("optional_file"), expected);
@@ -106,7 +121,7 @@ exports.optional_file_properties_reader = {
   },
   custom_options: function(test) {
     test.done();
-  },
+  }
 };
 
 
