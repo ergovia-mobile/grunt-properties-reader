@@ -53,7 +53,7 @@ function convertPropsToJson(text) {
 
                     while(nestedProperties.length) {
 
-                        i = nestedProperties.shift();
+                        i = nestedProperties.shift().trim();
 
                         if (nestedProperties.length) {
 
@@ -78,7 +78,7 @@ function convertPropsToJson(text) {
             }
         });
     }
-
+    // console.log(configObject);
     return configObject;
 }
 
